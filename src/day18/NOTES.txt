@@ -1,0 +1,39 @@
+## Part A
+
+OK, so I spent more time on this problem than any other.  For part A I tried:
+
+1. A depth-first searcher
+2. A breadth-first search
+3. A depth-first searcher with a "SimpleSearcher" helper.  The SimpleSearcher found the best
+   path to each key (using a breadth-first search, one key at a time) so that we only took
+   paths that went to keys.
+4. A breadth-first searcher with a "SimpleSearcher" helper
+5. Modifications of 3 & 4 using SimpleSearcher2.  The SimpleSearcher2 does 1 breadth-first
+   search and finds the shortest path to all keys in one pass.
+
+All of these solutions either took too long to run or blew up memory (the breadth-first searches
+were guilty of this since the depth-first search is very low memory).
+
+Finally, I noticed that while first searchers would not expand a path that crossed over
+itself, they would potentially visit spaces that other paths had already visited more
+efficiently.  Once I added a 'visistedHashSet' to store the hashes of previously-visited
+locations, the breadth-first searcher solved this very quickly.  It turns out that was all
+that was needed...
+
+## Part B
+
+For Part B, it was back to trying everything I could think of.  The breadth-first searcher
+with the 'visistedHashSet' was now too slow.  I tried adding in the SimpleSearcher2 to 
+only go down paths that lead to keys.  I even added cacheing so that we'd save the paths
+to keys for each quadrant and could re-use them quickly.  This looked like it could work
+if given enough time, but it was overflowing memory.  I added compression to compress the
+node states down to just a string of keys and then uncompress them when needed.  This
+might work, but I left it running for 8 hours one night and it only had explored paths to 
+16 of the 26 keys.
+
+I switched plans and went with a depth-first search with a taboo list.  No luck.  Too slow.
+I added a SimpleSearcher2 to the depth-first search, and Holy Shit!  It worked!  Not only
+did it work, it solved the puzzle in under 2 seconds.  Damn, this was a tough one.  While the
+solution wasn't that hard to come up with (in hind-sight), I tried so many other paths to
+get there that just weren't necessary.  On the other hand, I wouldn't have had the code for
+the SimpleSearcher2 laying around unless I had already messed with it in Part A.
